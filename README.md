@@ -713,7 +713,7 @@ touch myproject/expense/templates/expense/expense_{list,detail,form}.html
 
 ### Editar style.css
 
-```
+```css
 cat << EOF > myproject/core/static/css/style.css
 body {
   margin-top: 60px;
@@ -755,3 +755,73 @@ EOF
   Adicionar Despesa
 {% endblock content %}
 ```
+
+### Editar expense/views.py
+
+```python
+# expense/views.py
+from django.shortcuts import render
+
+
+def expense_list(request):
+    template_name = 'expense/expense_list.html'
+    return render(request, template_name)
+
+
+def expense_detail(request, pk):
+    template_name = 'expense/expense_detail.html'
+    return render(request, template_name)
+
+
+def expense_create(request):
+    template_name = 'expense/expense_form.html'
+    return render(request, template_name)
+```
+
+
+### Editar expense/urls.py
+
+```
+touch myproject/expense/urls.py
+```
+
+```python
+# expense/urls.py
+from django.urls import path
+
+from myproject.expense import views as v
+
+app_name = 'expense'
+
+urlpatterns = [
+    path('', v.expense_list, name='expense_list'),
+    path('<int:pk>/', v.expense_detail, name='expense_detail'),
+    path('create/', v.expense_create, name='expense_create'),
+]
+```
+
+### Editar urls.py
+
+```python
+# urls.py
+...
+path('expense/', include('myproject.expense.urls', namespace='expense')),
+...
+```
+
+### Editar includes/nav.html
+
+```html
+...
+<a class="nav-link" href="{% url 'expense:expense_list' %}">Despesas</a>
+...
+```
+
+> Rodar a aplicação e navegar pelas urls.
+
+
+
+## CRUD
+
+### Editar expense/views.py
+
