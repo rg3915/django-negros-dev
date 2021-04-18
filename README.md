@@ -340,19 +340,31 @@ def index(request):
 
 ### Nível 3
 
-### Editar core/urls.py
-
-
 
 ### Editar core/views.py
 
+```python
+# core/views.py
+from django.shortcuts import render
 
+
+def index(request):
+    template_name = 'index.html'
+    return render(request, template_name)
+```
 
 ### Editar core/templates/index.html
 
+```
+mkdir myproject/core/templates
+touch myproject/core/templates/index.html
+```
 
-
-
+```html
+<!-- index -->
+<h1>Django Tutorial</h1>
+<h2>Negros Dev</h2>
+```
 
 
 ## Projeto mais completo
