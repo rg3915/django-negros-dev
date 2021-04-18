@@ -371,3 +371,98 @@ touch myproject/core/templates/index.html
 
 ### Instalando e usando PostgreSQL
 
+```
+sudo apt-get install -y postgresql-12 postgresql-contrib-12
+```
+
+#### Criar database
+
+sudo su - postgres
+psql -U postgres -c "CREATE ROLE myuser ENCRYPTED PASSWORD 'mypass' LOGIN;"
+psql -U postgres -c "CREATE DATABASE mydb OWNER myuser;"
+
+
+### Editar o settings.py
+
+```python
+# settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB', 'postgres'),
+        'USER': config('POSTGRES_USER', 'postgres'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('DB_HOST', 'localhost'),
+        'PORT': '5432',
+    }
+}
+```
+
+### Editar o .env
+
+```
+# .env
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+DB_HOST=localhost
+```
+
+### Instalando psycopg2-binary
+
+```
+django.core.exceptions.ImproperlyConfigured: Error loading psycopg2 module: No module named 'psycopg2'
+```
+
+```
+pip install psycopg2-binary
+
+pip freeze | grep psycopg2-binary >> requirements.txt
+```
+
+### Criando um novo app
+
+```
+cd myproject
+python ../manage.py startapp expense
+```
+
+![models.png](img/models.png)
+
+
+#### Edite o settings.py
+
+```python
+# settings.py
+INSTALLED_APPS = [
+    ...
+    'myproject.core',
+    'myproject.expense',
+]
+```
+
+### Editar expense/models.py
+
+
+
+### Editar expense/admin.py
+
+
+
+Gerar arquivo de migração.
+
+```
+python manage.py makemigrations
+```
+
+Executar a migração.
+
+```
+python manage.py migrate
+```
+
+
+
+
+## ORM
+

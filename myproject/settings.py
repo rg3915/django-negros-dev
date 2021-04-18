@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'myproject.core'
+    'myproject.core',
+    'myproject.expense',
 ]
 
 MIDDLEWARE = [
@@ -78,9 +79,20 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-default_dburl = 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')
+# default_dburl = 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')
+# DATABASES = {
+#     'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
+# }
+
 DATABASES = {
-    'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB', 'postgres'),
+        'USER': config('POSTGRES_USER', 'postgres'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('DB_HOST', 'localhost'),
+        'PORT': '5432',
+    }
 }
 
 
