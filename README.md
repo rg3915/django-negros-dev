@@ -268,6 +268,22 @@ STATIC_ROOT = BASE_DIR.joinpath('staticfiles')
 
 ### Editar urls.py
 
+```python
+# urls.py
+from django.contrib import admin
+from django.urls import path
+from django.http import HttpResponse
+
+
+def index(request):
+    return HttpResponse('<h1>Django Tutorial</h1>')
+
+
+urlpatterns = [
+    path('', index, name='index'),
+    path('admin/', admin.site.urls),
+]
+```
 
 
 ### Nível 2
