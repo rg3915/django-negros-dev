@@ -824,5 +824,223 @@ path('expense/', include('myproject.expense.urls', namespace='expense')),
 
 ## CRUD
 
+## Lista
+
 ### Editar expense/views.py
+
+```python
+# expense/views.py
+from .models import Expense
+
+
+def expense_list(request):
+    template_name = 'expense/expense_list.html'
+    object_list = Expense.objects.all()
+    context = {'object_list': object_list}
+    return render(request, template_name, context)
+```
+
+### Editar expense_list.html
+
+```html
+<!-- expense_list.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    Lista de Despesas
+    <a class="btn btn-primary" href="{% url 'expense:expense_create' %}">Adicionar</a>
+  </h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Pago a</th>
+        <th>Valor</th>
+        <th>Data de pagamento</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in object_list %}
+        <tr>
+          <td>
+            <a href="{{ object.get_absolute_url }}">{{ object.description }}</a>
+          </td>
+          <td>{{ object.customer }}</td>
+          <td>{{ object.value }}</td>
+          <td>{{ object.payment_date }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
+```
+
+### Editar expense/models.py
+
+```python
+# expense/models.py
+from django.urls import reverse_lazy
+
+    ...
+    def get_absolute_url(self):
+        return reverse_lazy('expense:expense_detail', kwargs={'pk': self.pk})
+```
+
+## Detalhes
+
+### Editar expense_detail.html
+
+```html
+<!-- expense_detail.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Detalhes de Despesa</h1>
+
+  <ul>
+    <li><b>Descrição:</b> {{ object.description }}</li>
+    <li><b>Cliente:</b> {{ object.customer }}</li>
+    <li><b>Valor:</b> {{ object.value }}</li>
+    <li><b>Data de pagamento:</b> {{ object.payment_date }}</li>
+  </ul>
+{% endblock content %}
+```
+
+### Editar expense/views.py
+
+```python
+# expense/views.py
+def expense_detail(request, pk):
+    template_name = 'expense/expense_detail.html'
+    _object = Expense.objects.get(pk=pk)
+    context = {'object': _object}
+    return render(request, template_name, context)
+```
+
+## Adicionar
+
+### Editar expense_form.html
+
+```html
+<!-- expense_form.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Despesa</h1>
+  <div class="cols-6">
+    <form class="form-horizontal" action="." method="POST" enctype="multipart/form-data">
+      <div class="col-sm-6">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock content %}
+```
+
+
+### Editar expense/forms.py
+
+```
+touch myproject/expense/forms.py
+```
+
+
+```python
+# expense/forms.py
+from django import forms
+
+from .models import Expense
+
+
+class ExpenseForm(forms.ModelForm):
+    payment_date = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={
+            'type': 'date',
+        })
+    )
+
+    class Meta:
+        model = Expense
+        # fields = '__all__'
+        fields = ('description', 'payment_date', 'customer', 'value')
+        # exclude = ('paid',)
+
+    def __init__(self, *args, **kwargs):
+        super(ExpenseForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+```
+
+
+### Editar expense/views.py
+
+```python
+# expense/views.py
+from django.shortcuts import redirect, render
+
+from .forms import ExpenseForm
+from .models import Expense
+
+
+def expense_create(request):
+    template_name = 'expense/expense_form.html'
+    form = ExpenseForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('expense:expense_list')
+
+    context = {'form': form}
+    return render(request, template_name, context)
+```
+
+## Editar
+
+### Editar expense_list.html
+
+```html
+code here
+```
+
+### Editar expense/urls.py
+
+```python
+# expense/urls.py
+
+```
+
+### Editar expense/views.py
+
+```python
+# expense/views.py
+
+```
+
+## Deletar
+
+### Editar expense_list.html
+
+```html
+code here
+```
+
+### Editar expense/urls.py
+
+```python
+# expense/urls.py
+
+```
+
+### Editar expense/views.py
+
+```python
+# expense/views.py
+
+```
 

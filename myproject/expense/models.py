@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 
 from myproject.core.models import TimeStampedModel
 
@@ -43,5 +44,5 @@ class Expense(TimeStampedModel):
     def __str__(self):
         return self.description
 
-    # def get_absolute_url(self):
-    #     return reverse_lazy('_detail', kwargs={'pk': self.pk})
+    def get_absolute_url(self):
+        return reverse_lazy('expense:expense_detail', kwargs={'pk': self.pk})

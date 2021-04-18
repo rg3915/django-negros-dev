@@ -2,5 +2,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-  Lista de Despesas
+  <h1>
+    Lista de Despesas
+    <a class="btn btn-primary" href="{% url 'expense:expense_create' %}">Adicionar</a>
+  </h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Pago a</th>
+        <th>Valor</th>
+        <th>Data de pagamento</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in object_list %}
+        <tr>
+          <td>
+            <a href="{{ object.get_absolute_url }}">{{ object.description }}</a>
+          </td>
+          <td>{{ object.customer }}</td>
+          <td>{{ object.value }}</td>
+          <td>{{ object.payment_date }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock content %}

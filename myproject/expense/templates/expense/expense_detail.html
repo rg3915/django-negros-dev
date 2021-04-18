@@ -2,5 +2,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-  Detalhes de Despesa
+  <h1>Detalhes de Despesa</h1>
+
+  <ul>
+    <li><b>Descrição:</b> {{ object.description }}</li>
+    <li><b>Cliente:</b> {{ object.customer }}</li>
+    <li><b>Valor:</b> {{ object.value }}</li>
+    <li><b>Data de pagamento:</b> {{ object.payment_date }}</li>
+  </ul>
 {% endblock content %}
