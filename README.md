@@ -608,5 +608,150 @@ expense = Expense.objects.get(pk=1)
 expense.delete()
 ```
 
+
 ## Templates
 
+```
+mkdir -p myproject/core/templates/includes
+
+touch myproject/core/templates/base.html
+touch myproject/core/templates/includes/nav.html
+
+
+mkdir -p myproject/core/static/{css,img,js}
+
+touch myproject/core/static/css/style.css
+touch myproject/core/static/js/main.js
+
+mkdir -p myproject/expense/templates/expense
+
+touch myproject/expense/templates/expense/expense_{list,detail,form}.html
+```
+
+### Editar base.html
+
+```html
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="shortcut icon" href="https://www.djangoproject.com/favicon.ico">
+  <title>Django</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+  <!-- Font-awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  {% block css %}{% endblock css %}
+
+</head>
+
+<body>
+  <div class="container">
+    {% include "includes/nav.html" %}
+    {% block content %}{% endblock content %}
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <!-- Bootstrap core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+```
+
+### Editar includes/nav.html
+
+```html
+<!-- includes/nav.html -->
+<!-- https://getbootstrap.com/docs/4.0/examples/starter-template/ -->
+<!-- https://github.com/JTruax/bootstrap-starter-template/blob/master/template/start.html -->
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="">Despesas</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+```
+
+
+### Editar index.html
+
+```html
+<!-- index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1>Django Tutorial</h1>
+    <a href="https://negros.dev/" target="_blank">negros.dev</a>
+  </div>
+{% endblock content %}
+```
+
+
+### Editar style.css
+
+```
+cat << EOF > myproject/core/static/css/style.css
+body {
+  margin-top: 60px;
+}
+EOF
+```
+
+> Rodar a aplicação
+
+### Editar expense_list.html
+
+```html
+<!-- expense_list.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  Lista de Despesas
+{% endblock content %}
+```
+
+### Editar expense_detail.html
+
+```html
+<!-- expense_detail.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  Detalhes de Despesa
+{% endblock content %}
+```
+
+### Editar expense_form.html
+
+```html
+<!-- expense_form.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  Adicionar Despesa
+{% endblock content %}
+```
