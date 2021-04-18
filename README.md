@@ -1029,7 +1029,7 @@ def expense_create(request):
 ```python
 # expense/urls.py
 ...
-path('<int:pk>/udpate/', v.expense_update, name='expense_update'),
+path('<int:pk>/update/', v.expense_update, name='expense_update'),
 ```
 
 ### Editar expense/views.py
@@ -1057,19 +1057,60 @@ def expense_update(request, pk):
 ### Editar expense_list.html
 
 ```html
-code here
+<a href="{% url 'expense:expense_delete' object.pk %}" style="padding-left: 7px">
+  <i class="fa fa-close no"></i>
+</a>
 ```
 
 ### Editar expense/urls.py
 
 ```python
 # expense/urls.py
-
+...
+    path('<int:pk>/delete/', v.expense_delete, name='expense_delete'),
 ```
 
 ### Editar expense/views.py
 
 ```python
 # expense/views.py
+def expense_delete(request, pk):
+    template_name = 'expense/expense_delete.html'
+    obj = Expense.objects.get(pk=pk)
 
+    if request.method == 'POST':
+        obj.delete()
+        return redirect('expense:expense_list')
+
+    context = {'object': obj}
+    return render(request, template_name, context)
 ```
+
+### Editar expense/expense_delete.html
+
+```html
+<!-- expense_delete.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Deletar Despesa</h1>
+  <div class="cols-6">
+    <form action="." method="POST">
+      <div class="col-sm-6">
+        {% csrf_token %}
+        <p>Deseja deletar {{ object }} ?</p>
+        <p>Valor: {{ object.value }}</p>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Sim</button>
+          <a class="btn btn-danger" href="{% url 'expense:expense_list' %}">Não</a>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock content %}
+```
+
+## Class Based View
+
+https://ccbv.co.uk/
+

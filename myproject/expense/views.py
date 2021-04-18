@@ -43,3 +43,15 @@ def expense_update(request, pk):
 
     context = {'form': form}
     return render(request, template_name, context)
+
+
+def expense_delete(request, pk):
+    template_name = 'expense/expense_delete.html'
+    obj = Expense.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        obj.delete()
+        return redirect('expense:expense_list')
+
+    context = {'object': obj}
+    return render(request, template_name, context)

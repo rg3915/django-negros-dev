@@ -29,9 +29,9 @@
             <a href="{% url 'expense:expense_update' object.pk %}">
               <i class="fa fa-edit"></i>
             </a>
-            <a href="" style="padding-left: 7px">
+            <a href="{% url 'expense:expense_delete' object.pk %}" style="padding-left: 7px">
               <i class="fa fa-close no"></i>
-            </span>
+            </a>
           </td>
         </tr>
       {% endfor %}
