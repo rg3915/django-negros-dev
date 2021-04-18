@@ -226,6 +226,7 @@ Veja a estrutura do projeto
 ```python
 # settings.py
 from pathlib import Path
+
 from decouple import Csv, config
 from dj_database_url import parse as dburl
 
@@ -271,8 +272,8 @@ STATIC_ROOT = BASE_DIR.joinpath('staticfiles')
 ```python
 # urls.py
 from django.contrib import admin
-from django.urls import path
 from django.http import HttpResponse
+from django.urls import path
 
 
 def index(request):
@@ -290,11 +291,52 @@ urlpatterns = [
 
 ### Editar core/urls.py
 
+```
+touch myproject/core/urls.py
+```
+
+
+```python
+# core/urls.py
+from django.urls import path
+
+from .views import index
+
+app_name = 'core'
+
+urlpatterns = [
+    path('', index, name='index'),
+]
+```
+
+### Editar urls.py
+
+```python
+# urls.py
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('', include('myproject.core.urls', namespace='core')),
+    path('admin/', admin.site.urls),
+]
+```
 
 
 ### Editar core/views.py
 
+```
+touch myproject/core/views.py
+```
 
+```python
+# core/views.py
+from django.http import HttpResponse
+
+
+def index(request):
+    return HttpResponse('<h1>Django Tutorial</h1>')
+```
 
 ### Nível 3
 
