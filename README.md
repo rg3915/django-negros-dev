@@ -1075,7 +1075,7 @@ def expense_update(request, pk):
 ```python
 # expense/views.py
 def expense_delete(request, pk):
-    template_name = 'expense/expense_delete.html'
+    template_name = 'expense/expense_confirm_delete.html'
     obj = Expense.objects.get(pk=pk)
 
     if request.method == 'POST':
@@ -1086,10 +1086,10 @@ def expense_delete(request, pk):
     return render(request, template_name, context)
 ```
 
-### Editar expense/expense_delete.html
+### Editar expense/expense_confirm_delete.html
 
 ```html
-<!-- expense_delete.html -->
+<!-- expense_confirm_delete.html -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -1114,3 +1114,87 @@ def expense_delete(request, pk):
 
 https://ccbv.co.uk/
 
+### Editar expense/urls.py
+
+```python
+# expense/urls.py
+from django.urls import path
+
+from myproject.expense import views as v
+
+app_name = 'expense'
+
+urlpatterns = [
+    # path('', v.expense_list, name='expense_list'),
+    # path('<int:pk>/', v.expense_detail, name='expense_detail'),
+    # path('create/', v.expense_create, name='expense_create'),
+    # path('<int:pk>/update/', v.expense_update, name='expense_update'),
+    # path('<int:pk>/delete/', v.expense_delete, name='expense_delete'),
+    path('', v.ExpenseListView.as_view(), name='expense_list'),
+    path('<int:pk>/', v.ExpenseDetailView.as_view(), name='expense_detail'),
+    path('create/', v.ExpenseCreateView.as_view(), name='expense_create'),
+    path('<int:pk>/update/', v.ExpenseUpdateView.as_view(), name='expense_update'),
+    path('<int:pk>/delete/', v.ExpenseDeleteView.as_view(), name='expense_delete'),
+]
+```
+
+### Editar expense/views.py
+
+```python
+# expense/views.py
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView
+)
+
+...
+
+class ExpenseListView(ListView):
+    model = Expense
+
+
+class ExpenseDetailView(DetailView):
+    model = Expense
+
+
+class ExpenseCreateView(CreateView):
+    model = Expense
+    form_class = ExpenseForm
+
+
+class ExpenseUpdateView(UpdateView):
+    model = Expense
+    form_class = ExpenseForm
+
+
+class ExpenseDeleteView(DeleteView):
+    model = Expense
+    success_url = reverse_lazy('expense:expense_list')
+```
+
+Assista: [Python-triangulo: Django: FBV vs CBV](https://www.youtube.com/watch?v=2qZcPb8ZWQA)
+
+
+## Links
+
+* https://www.python.org/
+* https://www.djangoproject.com/
+* https://gitlab.com/rg3915/django-negros-dev
+* https://getbootstrap.com/
+* https://docs.djangoproject.com/en/3.2/ref/models/fields/
+* https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+* https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+* https://code.jquery.com/jquery-3.4.1.min.js
+* https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js
+* https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js
+* https://getbootstrap.com/docs/4.0/examples/starter-template/
+* https://github.com/JTruax/bootstrap-starter-template/blob/master/template/start.html
+* https://negros.dev/
+* https://ccbv.co.uk/
+* https://www.youtube.com/watch?v=2qZcPb8ZWQA
+* https://www.youtube.com/regis-do-python
