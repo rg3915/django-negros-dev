@@ -113,7 +113,7 @@ python -m venv .venv
 # Linux
 source .venv/bin/activate
 # Windows
-.venv\Scripts/activate.bat
+.venv\Scripts\activate.bat
 ```
 
 ### Instale as dependências
@@ -185,7 +185,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-### Rodando a aplicação
+### Rodando a aplicação (nível 0)
 
 ```
 python manage.py runserver
@@ -195,6 +195,105 @@ A aplicação roda na porta 8000.
 
 
 ## Projeto mínimo
+
+Veja a estrutura do projeto
+
+```
+├── .gitignore
+├── contrib
+│   └── env_gen.py
+├── db.sqlite3
+├── manage.py
+├── myproject
+│   ├── asgi.py
+│   ├── core
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   └── views.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── README.md
+└── requirements.txt
+```
+
+### Nível 1
+
+### Editar settings.py
+
+```python
+# settings.py
+from pathlib import Path
+from decouple import Csv, config
+from dj_database_url import parse as dburl
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = config('SECRET_KEY')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
+
+...
+
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+default_dburl = 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')
+DATABASES = {
+    'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
+}
+
+...
+
+LANGUAGE_CODE = 'pt-br'
+
+TIME_ZONE = 'America/Sao_Paulo'
+
+...
+
+STATIC_ROOT = BASE_DIR.joinpath('staticfiles')
+
+```
+
+### Editar urls.py
+
+
+
+### Nível 2
+
+### Editar core/urls.py
+
+
+
+### Editar core/views.py
+
+
+
+### Nível 3
+
+### Editar core/urls.py
+
+
+
+### Editar core/views.py
+
+
+
+### Editar core/templates/index.html
+
+
+
 
 
 
