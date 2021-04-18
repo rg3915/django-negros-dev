@@ -468,6 +468,7 @@ class TimeStampedModel(models.Model):
 
 https://docs.djangoproject.com/en/3.2/ref/models/fields/
 
+
 ```python
 # expense/models.py
 from django.db import models
