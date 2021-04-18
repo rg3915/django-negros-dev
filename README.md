@@ -441,13 +441,111 @@ INSTALLED_APPS = [
 ]
 ```
 
+### Editar core/models.py
+
+```python
+# core/models.py
+from django.db import models
+
+
+class TimeStampedModel(models.Model):
+    created = models.DateTimeField(
+        'criado em',
+        auto_now_add=True,
+        auto_now=False
+    )
+    modified = models.DateTimeField(
+        'modificado em',
+        auto_now_add=False,
+        auto_now=True
+    )
+
+    class Meta:
+        abstract = True
+```
+
 ### Editar expense/models.py
 
+https://docs.djangoproject.com/en/3.2/ref/models/fields/
+
+```python
+# expense/models.py
+from django.db import models
+
+from myproject.core.models import TimeStampedModel
+
+
+class Customer(models.Model):
+    first_name = models.CharField('nome', max_length=50)
+    last_name = models.CharField('sobrenome', max_length=50, null=True, blank=True)  # noqa E501
+    email = models.EmailField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('first_name',)
+        verbose_name = 'cliente'
+        verbose_name_plural = 'clientes'
+
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name or ""}'.strip()
+
+    def __str__(self):
+        return self.full_name
+
+
+class Expense(TimeStampedModel):
+    description = models.CharField('descrição', max_length=100)
+    payment_date = models.DateField('data de pagamento', null=True, blank=True)
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.SET_NULL,
+        verbose_name='pago a',
+        related_name='expenses',
+        null=True,
+        blank=True
+    )
+    value = models.DecimalField('valor', max_digits=7, decimal_places=2)
+    paid = models.BooleanField('pago', default=False)
+
+    class Meta:
+        ordering = ('-payment_date',)
+        verbose_name = 'despesa'
+        verbose_name_plural = 'despesas'
+
+    def __str__(self):
+        return self.description
+
+    # def get_absolute_url(self):
+    #     return reverse_lazy('_detail', kwargs={'pk': self.pk})
+```
 
 
 ### Editar expense/admin.py
 
+```python
+# expense/admin.py
+from django.contrib import admin
 
+from .models import Customer, Expense
+
+# admin.site.register(Customer)
+
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'email')
+    search_fields = ('first_name', 'last_name', 'email')
+
+
+@admin.register(Expense)
+class ExpenseAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'customer', 'value', 'payment_date', 'paid')
+    search_fields = ('description', 'customer__first_name', 'customer__last_name')  # noqa E501
+    list_filter = ('paid',)
+    date_hierarchy = 'payment_date'
+```
+
+### Atualizando o banco
 
 Gerar arquivo de migração.
 
@@ -462,7 +560,53 @@ python manage.py migrate
 ```
 
 
-
-
 ## ORM
+
+```
+python manage.py shell_plus
+```
+
+Criando alguns registros
+
+```
+customers = ['Huguinho', 'Zezinho', 'Luizinho']
+for customer in customers:
+    Customer.objects.create(first_name=customer)
+
+customers = ['Prático', 'Heitor', 'Cícero']
+items = []
+for customer in customers:
+    obj = Customer(first_name=customer)
+    items.append(obj)
+
+Customer.objects.bulk_create(items)
+```
+
+Criar despesas pelo Admin.
+
+Alterando a data das despesas não pagas.
+
+```
+# Selecionar as despesas não pagas.
+expenses = Expense.objects.filter(paid=False)
+
+# Alterando a data de pagamento para uma data futura.
+from datetime import date
+
+future = date(2021, 5, 2)
+
+for expense in expenses:
+    expense.payment_date = future
+
+Expense.objects.bulk_update(expenses, ['payment_date'])
+```
+
+**Cuidado ao deletar**
+
+```
+expense = Expense.objects.get(pk=1)
+expense.delete()
+```
+
+## Templates
 
