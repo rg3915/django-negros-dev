@@ -13,6 +13,7 @@
         <th>Pago a</th>
         <th>Valor</th>
         <th>Data de pagamento</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
@@ -24,6 +25,14 @@
           <td>{{ object.customer }}</td>
           <td>{{ object.value }}</td>
           <td>{{ object.payment_date }}</td>
+          <td>
+            <a href="{% url 'expense:expense_update' object.pk %}">
+              <i class="fa fa-edit"></i>
+            </a>
+            <a href="" style="padding-left: 7px">
+              <i class="fa fa-close no"></i>
+            </span>
+          </td>
         </tr>
       {% endfor %}
     </tbody>

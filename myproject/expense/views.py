@@ -13,14 +13,28 @@ def expense_list(request):
 
 def expense_detail(request, pk):
     template_name = 'expense/expense_detail.html'
-    _object = Expense.objects.get(pk=pk)
-    context = {'object': _object}
+    obj = Expense.objects.get(pk=pk)
+    context = {'object': obj}
     return render(request, template_name, context)
 
 
 def expense_create(request):
     template_name = 'expense/expense_form.html'
     form = ExpenseForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('expense:expense_list')
+
+    context = {'form': form}
+    return render(request, template_name, context)
+
+
+def expense_update(request, pk):
+    template_name = 'expense/expense_form.html'
+    instance = Expense.objects.get(pk=pk)
+    form = ExpenseForm(request.POST or None, instance=instance)
 
     if request.method == 'POST':
         if form.is_valid():

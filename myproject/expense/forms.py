@@ -4,10 +4,13 @@ from .models import Expense
 
 
 class ExpenseForm(forms.ModelForm):
-    payment_date = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'date',
-        })
+    payment_date = forms.DateField(
+        widget=forms.DateInput(
+            format='%d/%m/%Y',
+            attrs={
+                'type': 'date',
+            }),
+        input_formats=('%Y-%m-%d', )
     )
 
     class Meta:

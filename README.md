@@ -719,6 +719,10 @@ cat << EOF > myproject/core/static/css/style.css
 body {
   margin-top: 60px;
 }
+
+.no {
+  color: red;
+}
 EOF
 ```
 
@@ -958,10 +962,13 @@ from .models import Expense
 
 
 class ExpenseForm(forms.ModelForm):
-    payment_date = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'date',
-        })
+    payment_date = forms.DateField(
+        widget=forms.DateInput(
+            format='%d/%m/%Y',
+            attrs={
+                'type': 'date',
+            }),
+        input_formats=('%Y-%m-%d', )
     )
 
     class Meta:
@@ -1005,24 +1012,47 @@ def expense_create(request):
 ### Editar expense_list.html
 
 ```html
-code here
+<!-- expense_list.html -->
+
+<th>Ações</th>
+
+  <td>
+    <a href="{% url 'expense:expense_update' object.pk %}">
+      <i class="fa fa-edit"></i>
+    </a>
+  </td>
+
 ```
 
 ### Editar expense/urls.py
 
 ```python
 # expense/urls.py
-
+...
+path('<int:pk>/udpate/', v.expense_update, name='expense_update'),
 ```
 
 ### Editar expense/views.py
 
 ```python
 # expense/views.py
+def expense_update(request, pk):
+    template_name = 'expense/expense_form.html'
+    instance = Expense.objects.get(pk=pk)
+    form = ExpenseForm(request.POST or None, instance=instance)
 
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('expense:expense_list')
+
+    context = {'form': form}
+    return render(request, template_name, context)
 ```
 
+
 ## Deletar
+
 
 ### Editar expense_list.html
 
@@ -1043,4 +1073,3 @@ code here
 # expense/views.py
 
 ```
-
