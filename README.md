@@ -119,6 +119,7 @@ source .venv/bin/activate
 ### Instale as dependências
 
 ```
+pip install -U pip
 pip install Django==3.1.8 dj-database-url python-decouple django-extensions
 ```
 
@@ -142,7 +143,14 @@ Veja no repositório do projeto.
 
 ### Gere um arquivo .env
 
+Copiar o conteúdo de `env_gen.py`
+
+https://gitlab.com/rg3915/django-negros-dev/-/blob/master/contrib/env_gen.py
+
 ```
+mkdir contrib
+touch contrib/env_gen.py
+
 python contrib/env_gen.py
 
 cat .env
@@ -168,7 +176,7 @@ python ../manage.py startapp core
 INSTALLED_APPS = [
     ...
     'django_extensions',
-    'myproject.core'
+    'myproject.core',
 ]
 ```
 
@@ -377,9 +385,12 @@ sudo apt-get install -y postgresql-12 postgresql-contrib-12
 
 #### Criar database
 
+```
 sudo su - postgres
 psql -U postgres -c "CREATE ROLE myuser ENCRYPTED PASSWORD 'mypass' LOGIN;"
 psql -U postgres -c "CREATE DATABASE mydb OWNER myuser;"
+```
+
 
 
 ### Editar o settings.py
@@ -391,8 +402,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('POSTGRES_DB', 'postgres'),
         'USER': config('POSTGRES_USER', 'postgres'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': config('DB_HOST', 'localhost'),
+        'PASSWORD': config('POSTGRES_PASSWORD', ''),
+        'HOST': config('DB_HOST', ''),
         'PORT': '5432',
     }
 }
@@ -425,6 +436,7 @@ pip freeze | grep psycopg2-binary >> requirements.txt
 ```
 cd myproject
 python ../manage.py startapp expense
+cd ..
 ```
 
 ![models.png](img/models.png)
@@ -588,6 +600,8 @@ Criar despesas pelo Admin.
 Alterando a data das despesas não pagas.
 
 ```
+python manage.py shell_plus
+
 # Selecionar as despesas não pagas.
 expenses = Expense.objects.filter(paid=False)
 
@@ -627,6 +641,8 @@ touch myproject/core/static/js/main.js
 mkdir -p myproject/expense/templates/expense
 
 touch myproject/expense/templates/expense/expense_{list,detail,form}.html
+
+tree
 ```
 
 ### Editar base.html
@@ -1067,7 +1083,7 @@ def expense_update(request, pk):
 ```python
 # expense/urls.py
 ...
-    path('<int:pk>/delete/', v.expense_delete, name='expense_delete'),
+path('<int:pk>/delete/', v.expense_delete, name='expense_delete'),
 ```
 
 ### Editar expense/views.py
@@ -1087,6 +1103,10 @@ def expense_delete(request, pk):
 ```
 
 ### Editar expense/expense_confirm_delete.html
+
+```
+touch myproject/expense/templates/expense/expense_confirm_delete.html
+```
 
 ```html
 <!-- expense_confirm_delete.html -->
