@@ -22,9 +22,9 @@
           <td>
             <a href="{{ object.get_absolute_url }}">{{ object.description }}</a>
           </td>
-          <td>{{ object.customer }}</td>
+          <td>{{ object.customer|default:'---' }}</td>
           <td>{{ object.value }}</td>
-          <td>{{ object.payment_date }}</td>
+          <td>{{ object.payment_date|date:'d/m/Y'|default:'---' }}</td>
           <td>
             <a href="{% url 'expense:expense_update' object.pk %}">
               <i class="fa fa-edit"></i>

@@ -886,9 +886,9 @@ def expense_list(request):
           <td>
             <a href="{{ object.get_absolute_url }}">{{ object.description }}</a>
           </td>
-          <td>{{ object.customer }}</td>
+          <td>{{ object.customer|default:'---' }}</td>
           <td>{{ object.value }}</td>
-          <td>{{ object.payment_date }}</td>
+          <td>{{ object.payment_date|date:'d/m/Y'|default:'---' }}</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -920,9 +920,9 @@ from django.urls import reverse_lazy
 
   <ul>
     <li><b>Descrição:</b> {{ object.description }}</li>
-    <li><b>Cliente:</b> {{ object.customer }}</li>
+    <li><b>Cliente:</b> {{ object.customer|default:'---' }}</li>
     <li><b>Valor:</b> {{ object.value }}</li>
-    <li><b>Data de pagamento:</b> {{ object.payment_date }}</li>
+    <li><b>Data de pagamento:</b> {{ object.payment_date|date:'d/m/Y'|default:'---' }}</li>
   </ul>
 {% endblock content %}
 ```
