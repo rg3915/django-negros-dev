@@ -4,6 +4,8 @@ from .models import Expense
 
 
 class ExpenseForm(forms.ModelForm):
+    required_css_class = 'required'
+
     payment_date = forms.DateField(
         label='Data de pagamento',
         widget=forms.DateInput(
