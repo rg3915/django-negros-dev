@@ -18,7 +18,7 @@ Tutorial para o site negros.dev
 * Rode as migrações.
 
 ```
-git clone https://gitlab.com/rg3915/django-negros-dev.git
+git clone https://github.com/rg3915/django-negros-dev.git
 cd django-negros-dev
 python3 -m venv .venv
 source .venv/bin/activate
@@ -145,7 +145,7 @@ Veja no repositório do projeto.
 
 Copiar o conteúdo de `env_gen.py`
 
-https://gitlab.com/rg3915/django-negros-dev/-/blob/master/contrib/env_gen.py
+https://github.com/rg3915/django-negros-dev/blob/main/contrib/env_gen.py
 
 ```
 mkdir contrib
@@ -1213,6 +1213,7 @@ Assista: [Python-triangulo: Django: FBV vs CBV](https://www.youtube.com/watch?v=
 
 * https://www.python.org/
 * https://www.djangoproject.com/
+* https://github.com/rg3915/django-negros-dev
 * https://gitlab.com/rg3915/django-negros-dev
 * https://getbootstrap.com/
 * https://docs.djangoproject.com/en/3.2/ref/models/fields/
